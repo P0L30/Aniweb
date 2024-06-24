@@ -1,5 +1,6 @@
 import React from "react";
-import LinearGradient from "react-native-linear-gradient";
+import { LinearGradient } from "expo-linear-gradient";
+
 import {
   View,
   Image,
@@ -18,7 +19,6 @@ const App = () => {
           style={styles.backgroundImage}
         />
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.roundButton}></TouchableOpacity>
           <TouchableOpacity style={styles.roundButton}></TouchableOpacity>
         </View>
       </View>

@@ -18,7 +18,6 @@ const App = () => {
         />
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.roundButton}></TouchableOpacity>
-          <TouchableOpacity style={styles.roundButton}></TouchableOpacity>
         </View>
       </View>
       <View style={styles.infoContainer}>
