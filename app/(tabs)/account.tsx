@@ -24,23 +24,19 @@ const App = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={styles.top}>
+        <View style={styles.top1}>
+          <Text style={styles.headerText}>My AniWeb</Text>
+          <Text style={styles.headerText}>drop</Text>
+        </View>
+        <View style={styles.top2}>
           <Image
             source={require("@/assets/images/8485a9142f18fe790a0ed40e190dbe9a.jpeg")}
-            style={styles.rec}
+            style={styles.acc}
           />
-        </View>
-        <View style={styles.genres}>
-          <ScrollView horizontal>
-            {["Action", "Drama", "Fantasy", "Romance", "More"].map((season) => (
-              <TouchableOpacity key={season} style={styles.genrebt}>
-                <Text style={styles.genre}>{season}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          <Text style={styles.headerText}>User name</Text>
         </View>
         <View style={styles.vidbox}>
-          <Text style={styles.headerText}>Popular</Text>
+          <Text style={styles.headerText}>Downloads</Text>
           <View>
             <ScrollView horizontal>
               {images.map((image) => (
@@ -54,7 +50,21 @@ const App = () => {
           </View>
         </View>
         <View style={styles.vidbox}>
-          <Text style={styles.headerText}>For you</Text>
+          <Text style={styles.headerText}>Animes you liked</Text>
+          <View>
+            <ScrollView horizontal>
+              {images.map((image) => (
+                <TouchableOpacity key={image.key} style={styles.midbt}>
+                  <Image source={image.src} style={styles.midvid} />
+                  <Text style={styles.animeName}>Anime Name</Text>
+                  <Text style={styles.smallInfo}>Year | ep number</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+        <View style={styles.vidbox}>
+          <Text style={styles.headerText}>My List</Text>
           <View>
             <ScrollView horizontal>
               {images.map((image) => (
@@ -95,45 +105,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 20,
   },
-  genre: {
-    color: "white",
-    fontFamily: "sans-serif",
-    fontWeight: 600,
-    fontSize: 13,
-  },
-  genres: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "95%",
-    height: "auto",
-    marginBottom: 20,
-  },
-  top: {
+  top1: {
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    display: "flex",
+    flexDirection: "row",
   },
-  genrebt: {
+  top2: {
+    width: "100%",
+    marginBottom: 20,
     justifyContent: "center",
     alignItems: "center",
-    width: "auto",
-    height: 30,
-    borderRadius: 43,
-    backgroundColor: "#3F4042",
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginLeft: 10,
   },
   headerText: {
     color: "white",
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 900,
     fontFamily: "sans-serif",
     marginLeft: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   vidbox: {
     width: "100%",
@@ -167,11 +158,10 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif",
     marginLeft: 10,
   },
-  rec: {
-    width: 390,
-    height: 500,
-    borderRadius: 30,
-    marginTop: 30,
+  acc: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
   },
 });
 export default App;
