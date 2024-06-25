@@ -2,6 +2,7 @@ import React from "react";
 import Naruto from "@/assets/images/naruto.jpeg";
 import Bleach from "@/assets/images/bleach.jpeg";
 import AOT from "@/assets/images/AOT.jpeg";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Image,
@@ -10,26 +11,40 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { Link } from "expo-router";
 
 const images = [
-  { src: Naruto, key: "Anime" },
-  { src: Bleach, key: "profile" },
-  { src: AOT, key: "aoy" },
-  { src: Naruto, key: "Anime" },
-  { src: Bleach, key: "profile" },
-  { src: AOT, key: "aoy" },
+  { src: Naruto, key: "Naruto" },
+  { src: Bleach, key: "Bleach" },
+  { src: AOT, key: "AOT" },
+  { src: Naruto, key: "Naruto" },
+  { src: Bleach, key: "Bleach" },
+  { src: AOT, key: "AOT" },
 ];
 
 const App = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={styles.top}>
+        <TouchableOpacity style={styles.top}>
+          {/* <Image
+            source={require("@/assets/images/8485a9142f18fe790a0ed40e190dbe9a.jpeg")}
+            style={styles.rec}
+          /> */}
           <Image
             source={require("@/assets/images/8485a9142f18fe790a0ed40e190dbe9a.jpeg")}
             style={styles.rec}
           />
-        </View>
+          <LinearGradient
+            colors={["transparent", "#040B1C"]}
+            style={styles.gradient}
+          >
+            <Image
+              source={require("@/assets/images/Title.png")}
+              style={styles.titleImage}
+            />
+          </LinearGradient>
+        </TouchableOpacity>
         <View style={styles.genres}>
           <ScrollView horizontal>
             {["Action", "Drama", "Fantasy", "Romance", "More"].map((season) => (
@@ -45,9 +60,11 @@ const App = () => {
             <ScrollView horizontal>
               {images.map((image) => (
                 <TouchableOpacity key={image.key} style={styles.midbt}>
-                  <Image source={image.src} style={styles.midvid} />
-                  <Text style={styles.animeName}>Anime Name</Text>
-                  <Text style={styles.smallInfo}>Year | ep number</Text>
+                  <Link href={"../watch"}>
+                    <Image source={image.src} style={styles.midvid} />
+                    <Text style={styles.animeName}>Anime Name</Text>
+                    <Text style={styles.smallInfo}>Year | ep number</Text>
+                  </Link>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -73,7 +90,9 @@ const App = () => {
             <ScrollView horizontal>
               {images.map((image) => (
                 <TouchableOpacity key={image.key} style={styles.midbt}>
+                  {/* <View style={styles.imagebox}> */}
                   <Image source={image.src} style={styles.midvid} />
+                  {/* </View> */}
                   <Text style={styles.animeName}>Anime Name</Text>
                   <Text style={styles.smallInfo}>Year | ep number</Text>
                 </TouchableOpacity>
@@ -87,6 +106,28 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  // imagebox: {
+  //   width: 144,
+  //   height: 205,
+  //   borderRadius: 25,
+  //   marginBottom: 5,
+  //   backgroundColor: "white",
+  // },
+  titleImage: {
+    width: 177,
+    height: 60,
+  },
+  gradient: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+    position: "absolute",
+    top: "85%",
+    left: 0,
+    height: 100,
+  },
   container: {
     width: "100%",
     height: "100%",
@@ -151,7 +192,6 @@ const styles = StyleSheet.create({
     width: 144,
     height: 205,
     borderRadius: 25,
-    marginBottom: 5,
   },
   animeName: {
     color: "white",
@@ -175,3 +215,24 @@ const styles = StyleSheet.create({
   },
 });
 export default App;
+
+{
+  /* <View style={styles.vidbox}>
+<Text style={styles.headerText}>Popular</Text>
+<View>
+  <ScrollView horizontal>
+    {images.map((image) => (
+      <TouchableOpacity
+        key={image.key}
+        style={styles.midbt}
+        onPress={() => navigation.navigate("watch")}
+      >
+        <Image source={image.src} style={styles.midvid} />
+        <Text style={styles.animeName}>Anime Name</Text>
+        <Text style={styles.smallInfo}>Year | ep number</Text>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
+</View>
+</View> */
+}

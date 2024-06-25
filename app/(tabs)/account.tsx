@@ -36,20 +36,6 @@ const App = () => {
           <Text style={styles.headerText}>User name</Text>
         </View>
         <View style={styles.vidbox}>
-          <Text style={styles.headerText}>Downloads</Text>
-          <View>
-            <ScrollView horizontal>
-              {images.map((image) => (
-                <TouchableOpacity key={image.key} style={styles.midbt}>
-                  <Image source={image.src} style={styles.midvid} />
-                  <Text style={styles.animeName}>Anime Name</Text>
-                  <Text style={styles.smallInfo}>Year | ep number</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-        <View style={styles.vidbox}>
           <Text style={styles.headerText}>Animes you liked</Text>
           <View>
             <ScrollView horizontal>
@@ -103,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#040B1C",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   top1: {
     width: "100%",
@@ -111,6 +97,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   top2: {
     width: "100%",
