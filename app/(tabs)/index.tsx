@@ -1,7 +1,12 @@
-import React from "react";
-import Naruto from "@/assets/images/naruto.jpeg";
-import Bleach from "@/assets/images/bleach.jpeg";
-import AOT from "@/assets/images/AOT.jpeg";
+"use client";
+import React, { useEffect, useState } from "react";
+import { useFonts } from "expo-font";
+import {
+  fetchTrendingAnime,
+  Anime,
+  fetchAnimeGenre,
+  Genre,
+} from "../../services/apiService";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
@@ -13,43 +18,77 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 
-const images = [
-  { src: Naruto, key: "Naruto" },
-  { src: Bleach, key: "Bleach" },
-  { src: AOT, key: "AOT" },
-  { src: Naruto, key: "Naruto" },
-  { src: Bleach, key: "Bleach" },
-  { src: AOT, key: "AOT" },
-];
+const AniwebHome: React.FC = () => {
+  const [fontsLoaded] = useFonts({
+    Blacknorthdemo: require("@/assets/fonts/Blacknorthdemo-mLE25.otf"),
+  });
 
-const App = () => {
+  const [genreList, setGenreList] = useState<Genre[]>([]);
+  useEffect(() => {
+    const getAnimeGenre = async () => {
+      try {
+        const data = await fetchAnimeGenre();
+        setGenreList(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getAnimeGenre();
+  }, []);
+
+  const [animeList, setAnimeList] = useState<Anime[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const getTrendingAnime = async () => {
+      try {
+        const data = await fetchTrendingAnime();
+        setAnimeList(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getTrendingAnime();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % animeList.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [animeList.length]);
+
   return (
     <View style={styles.container}>
       <ScrollView>
-        <TouchableOpacity style={styles.top}>
-          {/* <Image
-            source={require("@/assets/images/8485a9142f18fe790a0ed40e190dbe9a.jpeg")}
-            style={styles.rec}
-          /> */}
-          <Image
-            source={require("@/assets/images/8485a9142f18fe790a0ed40e190dbe9a.jpeg")}
-            style={styles.rec}
-          />
-          <LinearGradient
-            colors={["transparent", "#040B1C"]}
-            style={styles.gradient}
-          >
-            <Image
-              source={require("@/assets/images/Title.png")}
-              style={styles.titleImage}
-            />
-          </LinearGradient>
-        </TouchableOpacity>
+        {animeList.length > 0 && (
+          <TouchableOpacity style={styles.top}>
+            <Link href={"../watch"}>
+              <Image
+                source={{
+                  uri: animeList[currentIndex].attributes.posterImage.large,
+                }}
+                style={styles.rec}
+              />
+            </Link>
+            <LinearGradient
+              colors={["transparent", "#040B1C"]}
+              style={styles.gradient}
+            >
+              <Text style={styles.title}>
+                {animeList[currentIndex].attributes.canonicalTitle}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
         <View style={styles.genres}>
           <ScrollView horizontal>
-            {["Action", "Drama", "Fantasy", "Romance", "More"].map((season) => (
-              <TouchableOpacity key={season} style={styles.genrebt}>
-                <Text style={styles.genre}>{season}</Text>
+            {genreList.map((anime) => (
+              <TouchableOpacity key={anime.id} style={styles.genrebt}>
+                <Text style={styles.animeName}>{anime.attributes.name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -58,12 +97,19 @@ const App = () => {
           <Text style={styles.headerText}>Popular</Text>
           <View>
             <ScrollView horizontal>
-              {images.map((image) => (
-                <TouchableOpacity key={image.key} style={styles.midbt}>
+              {animeList.map((anime) => (
+                <TouchableOpacity key={anime.id} style={styles.midbt}>
                   <Link href={"../watch"}>
-                    <Image source={image.src} style={styles.midvid} />
-                    <Text style={styles.animeName}>Anime Name</Text>
-                    <Text style={styles.smallInfo}>Year | ep number</Text>
+                    <Image
+                      source={{ uri: anime.attributes.posterImage.small }}
+                      style={styles.midvid}
+                    />
+                    <View style={styles.info}>
+                      <Text style={styles.animeName}>
+                        {anime.attributes.canonicalTitle}
+                      </Text>
+                      <Text style={styles.smallInfo}>Year | ep number</Text>
+                    </View>
                   </Link>
                 </TouchableOpacity>
               ))}
@@ -74,11 +120,20 @@ const App = () => {
           <Text style={styles.headerText}>For you</Text>
           <View>
             <ScrollView horizontal>
-              {images.map((image) => (
-                <TouchableOpacity key={image.key} style={styles.midbt}>
-                  <Image source={image.src} style={styles.midvid} />
-                  <Text style={styles.animeName}>Anime Name</Text>
-                  <Text style={styles.smallInfo}>Year | ep number</Text>
+              {animeList.map((anime) => (
+                <TouchableOpacity key={anime.id} style={styles.midbt}>
+                  <Link href={"../watch"}>
+                    <Image
+                      source={{ uri: anime.attributes.posterImage.small }}
+                      style={styles.midvid}
+                    />
+                    <View style={styles.info}>
+                      <Text style={styles.animeName}>
+                        {anime.attributes.canonicalTitle}
+                      </Text>
+                      <Text style={styles.smallInfo}>Year | ep number</Text>
+                    </View>
+                  </Link>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -88,13 +143,20 @@ const App = () => {
           <Text style={styles.headerText}>Continue Watching</Text>
           <View>
             <ScrollView horizontal>
-              {images.map((image) => (
-                <TouchableOpacity key={image.key} style={styles.midbt}>
-                  {/* <View style={styles.imagebox}> */}
-                  <Image source={image.src} style={styles.midvid} />
-                  {/* </View> */}
-                  <Text style={styles.animeName}>Anime Name</Text>
-                  <Text style={styles.smallInfo}>Year | ep number</Text>
+              {animeList.map((anime) => (
+                <TouchableOpacity key={anime.id} style={styles.midbt}>
+                  <Link href={"../watch"}>
+                    <Image
+                      source={{ uri: anime.attributes.posterImage.small }}
+                      style={styles.midvid}
+                    />
+                    <View style={styles.info}>
+                      <Text style={styles.animeName}>
+                        {anime.attributes.canonicalTitle}
+                      </Text>
+                      <Text style={styles.smallInfo}>Year | ep number</Text>
+                    </View>
+                  </Link>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -106,16 +168,17 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  // imagebox: {
-  //   width: 144,
-  //   height: 205,
-  //   borderRadius: 25,
-  //   marginBottom: 5,
-  //   backgroundColor: "white",
-  // },
-  titleImage: {
-    width: 177,
-    height: 60,
+  title: {
+    color: "white",
+    fontFamily: "Blacknorthdemo",
+    fontSize: 30,
+    textAlign: "center",
+  },
+  info: {
+    width: 146,
+    height: "auto",
+    justifyContent: "center",
+    alignItems: "center",
   },
   gradient: {
     flex: 1,
@@ -124,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 1,
     position: "absolute",
-    top: "85%",
+    top: "76%",
     left: 0,
     height: 100,
   },
@@ -134,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#040B1C",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   genre: {
     color: "white",
@@ -150,10 +213,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   top: {
-    width: "100%",
+    width: 390,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
+    height: "auto",
+    marginHorizontal: 10,
   },
   genrebt: {
     justifyContent: "center",
@@ -171,7 +236,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: "white",
     fontSize: 30,
-    fontWeight: 900,
+    fontWeight: "bold",
     fontFamily: "sans-serif",
     marginLeft: 10,
     marginBottom: 20,
@@ -181,12 +246,15 @@ const styles = StyleSheet.create({
     height: "auto",
   },
   midbt: {
-    width: 144,
+    width: 146,
     height: "auto",
     borderRadius: 25,
     margin: 10,
-    justifyContent: "center",
+    display: "flex",
+    justifyContent: "flex-start",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
   },
   midvid: {
     width: 144,
@@ -195,15 +263,13 @@ const styles = StyleSheet.create({
   },
   animeName: {
     color: "white",
-    fontSize: 20,
-    fontWeight: 900,
+    fontSize: 15,
     fontFamily: "sans-serif",
-    marginLeft: 10,
+    textAlign: "center",
   },
   smallInfo: {
     color: "white",
     fontSize: 12,
-    fontWeight: 100,
     fontFamily: "sans-serif",
     marginLeft: 10,
   },
@@ -214,7 +280,8 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 });
-export default App;
+
+export default AniwebHome;
 
 {
   /* <View style={styles.vidbox}>

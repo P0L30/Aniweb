@@ -1,5 +1,8 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useFonts } from "expo-font";
 import {
   View,
   Image,
@@ -8,65 +11,122 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { Link } from "expo-router";
+import {
+  fetchTrendingAnime,
+  Anime,
+  fetchAnimeGenre,
+  Genre,
+} from "../services/apiService";
+// import { Link } from "expo-router";
 
 const App = () => {
+  const [fontsLoaded] = useFonts({
+    Blacknorthdemo: require("@/assets/fonts/Blacknorthdemo-mLE25.otf"),
+  });
+
+  const [genreList, setGenreList] = useState<Genre[]>([]);
+  useEffect(() => {
+    const getAnimeGenre = async () => {
+      try {
+        const data = await fetchAnimeGenre();
+        setGenreList(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getAnimeGenre();
+  }, []);
+
+  const [animeList, setAnimeList] = useState<Anime[]>([]);
+
+  useEffect(() => {
+    const getTrendingAnime = async () => {
+      try {
+        const data = await fetchTrendingAnime();
+        setAnimeList(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getTrendingAnime();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={styles.centered}>
-        <Image
-          source={require("@/assets/images/8485a9142f18fe790a0ed40e190dbe9a.jpeg")}
-          style={styles.backgroundImage}
-        />
-        {/* <View style={styles.buttonsContainer}>d
-          <TouchableOpacity style={styles.roundButton}></TouchableOpacity>
-        </View> */}
-      </View>
-      <View style={styles.infoContainer}>
-        <View style={styles.titleContainer}>
+      {/* <ScrollView style={styles.scrollbox}> */}
+      {animeList.length > 0 && (
+        <View style={styles.centered}>
+          <Image
+            source={{
+              uri: animeList[0].attributes.posterImage.large,
+            }}
+            style={styles.backgroundImage}
+          />
           <LinearGradient
             colors={["transparent", "#040B1C"]}
             style={styles.gradient}
           >
-            <Image
-              source={require("@/assets/images/Title.png")}
-              style={styles.titleImage}
-            />
+            <Text style={styles.title}>
+              {animeList[0].attributes.canonicalTitle}
+            </Text>
           </LinearGradient>
         </View>
-        <View>
-          <View style={styles.rowBetween}>
-            <View>
-              <Text style={styles.mainTitle}>One Piece</Text>
-              <Text style={styles.subTitle}>
-                1999 - | Action , Advancer , Comedy | 5.0
-              </Text>
+      )}
+      {animeList.map((anime) => (
+        <View style={styles.infoContainer}>
+          <View>
+            <View style={styles.rowBetween}>
+              <View>
+                <Text style={styles.mainTitle}>
+                  {animeList[0].attributes.canonicalTitle}
+                </Text>
+                <Text style={styles.subTitle}>
+                  1999 - | Action , Advancer , Comedy | 5.0
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.playButton}>
+                <Icon name="play" style={styles.playbt} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.playButton}></TouchableOpacity>
+            <Text style={styles.description}>
+              {animeList[0].attributes.synopsis}
+            </Text>
           </View>
-          <Text style={styles.description}>
-            Follows the adventures of Monkey D. Luffy and his pirate crew in
-            order to find the greatest treasure ever left by the legendary
-            Pirate, Gold Roger. The famous mystery treasure named "One Piece"
-          </Text>
+          <ScrollView horizontal style={styles.seasonsContainer}>
+            {["S1", "S2", "S3", "S4", "S5", "S6"].map((season) => (
+              <TouchableOpacity key={season} style={styles.seasonButton}>
+                <Text style={styles.seasonText}>{season}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <Image
+            source={require("@/assets/images/ep.jpeg")}
+            style={styles.episodeImage}
+          />
         </View>
-        <ScrollView horizontal style={styles.seasonsContainer}>
-          {["S1", "S2", "S3", "S4", "S5", "S6"].map((season) => (
-            <TouchableOpacity key={season} style={styles.seasonButton}>
-              <Text style={styles.seasonText}>{season}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        <Image
-          source={require("@/assets/images/ep.jpeg")}
-          style={styles.episodeImage}
-        />
-      </View>
+      ))}
+      {/* </ScrollView> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollbox: {
+    width: "100%",
+    height: "100%",
+  },
+  title: {
+    color: "white",
+    fontFamily: "Blacknorthdemo",
+    fontSize: 40,
+    textAlign: "center",
+  },
+  playbt: {
+    color: "white",
+    fontSize: 30,
+  },
   container: {
     width: "100%",
     height: "100%",
@@ -80,7 +140,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     position: "absolute",
-    top: -180,
+    top: -100,
     zIndex: 0,
     opacity: 0.95,
     width: "100%",
@@ -104,10 +164,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   gradient: {
-    flex: 1,
-    width: "111%",
+    width: "100%",
+    height: 100,
     justifyContent: "center",
     alignItems: "center",
+    position: "absolute",
+    top: "53%",
   },
   infoContainer: {
     position: "absolute",
@@ -155,7 +217,7 @@ const styles = StyleSheet.create({
     borderRadius: 34,
     justifyContent: "center",
     alignItems: "center",
-    paddingLeft: 15,
+    paddingLeft: 5,
   },
   description: {
     color: "#ffffff",

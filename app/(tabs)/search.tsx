@@ -1,5 +1,6 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+"use client";
+import React, { useEffect, useState } from "react";
+import { fetchTrendingAnime, Anime } from "../../services/apiService";
 import {
   View,
   Text,
@@ -8,37 +9,36 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import { Stack } from "expo-router";
+
 const App = () => {
-  const [text, onChangeText] = React.useState("Useless Text");
+  const [animeList, setAnimeList] = useState<Anime[]>([]);
+
+  useEffect(() => {
+    const getTrendingAnime = async () => {
+      try {
+        const data = await fetchTrendingAnime();
+        setAnimeList(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getTrendingAnime();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View>
         <TextInput
           style={styles.input}
-          onChangeText={onChangeText}
           placeholder="What do you want to watch"
         />
       </View>
       <View style={styles.searchbox}>
         <ScrollView style={styles.scroll}>
-          {[
-            "One piece",
-            "Naruto",
-            "Bleach",
-            "Attack on Titan",
-            "Moonlit Fantasy",
-            "Food wars",
-            "Dragon ball super",
-            "Bofuri",
-            "Mushoku tensei",
-            "Boruto",
-            "By the grace of the gods",
-            "Tower of Gods",
-          ].map((season) => (
-            <TouchableOpacity key={season} style={styles.textbox}>
-              <Text style={styles.text}>{season}</Text>
+          {animeList.map((anime) => (
+            <TouchableOpacity style={styles.textbox}>
+              <Text style={styles.text}>{anime.attributes.canonicalTitle}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     height: "auto",
   },
   text: {
-    color: "white",
+    color: "#FCFBFC",
     fontSize: 17,
   },
 });
