@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useFonts } from "expo-font";
 import {
   fetchTrendingAnime,
   Anime,
@@ -17,6 +16,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Link } from "expo-router";
+import { useFonts } from "expo-font";
 
 const AniwebHome: React.FC = () => {
   const [fontsLoaded] = useFonts({
@@ -38,8 +38,6 @@ const AniwebHome: React.FC = () => {
   }, []);
 
   const [animeList, setAnimeList] = useState<Anime[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   useEffect(() => {
     const getTrendingAnime = async () => {
       try {
@@ -53,6 +51,8 @@ const AniwebHome: React.FC = () => {
     getTrendingAnime();
   }, []);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % animeList.length);
@@ -61,12 +61,16 @@ const AniwebHome: React.FC = () => {
     return () => clearInterval(interval);
   }, [animeList.length]);
 
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView>
         {animeList.length > 0 && (
           <TouchableOpacity style={styles.top}>
-            <Link href={"../watch"}>
+            <Link href={`../watch/${animeList[currentIndex].id}`}>
               <Image
                 source={{
                   uri: animeList[currentIndex].attributes.posterImage.large,
@@ -85,82 +89,78 @@ const AniwebHome: React.FC = () => {
           </TouchableOpacity>
         )}
         <View style={styles.genres}>
-          <ScrollView horizontal>
-            {genreList.map((anime) => (
-              <TouchableOpacity key={anime.id} style={styles.genrebt}>
-                <Text style={styles.animeName}>{anime.attributes.name}</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {genreList.map((genre) => (
+              <TouchableOpacity key={genre.id} style={styles.genrebt}>
+                <Text style={styles.animeName}>{genre.attributes.name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
         <View style={styles.vidbox}>
           <Text style={styles.headerText}>Popular</Text>
-          <View>
-            <ScrollView horizontal>
-              {animeList.map((anime) => (
-                <TouchableOpacity key={anime.id} style={styles.midbt}>
-                  <Link href={"../watch"}>
-                    <Image
-                      source={{ uri: anime.attributes.posterImage.small }}
-                      style={styles.midvid}
-                    />
-                    <View style={styles.info}>
-                      <Text style={styles.animeName}>
-                        {anime.attributes.canonicalTitle}
-                      </Text>
-                      <Text style={styles.smallInfo}>Year | ep number</Text>
-                    </View>
-                  </Link>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {animeList.map((anime) => (
+              <TouchableOpacity key={anime.id} style={styles.midbt}>
+                <Link href={`../watch/${anime.id}`}>
+                  <Image
+                    source={{ uri: anime.attributes.posterImage.small }}
+                    style={styles.midvid}
+                  />
+                  <View style={styles.info}>
+                    <Text style={styles.animeName}>
+                      {anime.attributes.canonicalTitle}
+                    </Text>
+                    <Text style={styles.smallInfo}>
+                      {anime.attributes.createdAt} | ep number
+                    </Text>
+                  </View>
+                </Link>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
         <View style={styles.vidbox}>
           <Text style={styles.headerText}>For you</Text>
-          <View>
-            <ScrollView horizontal>
-              {animeList.map((anime) => (
-                <TouchableOpacity key={anime.id} style={styles.midbt}>
-                  <Link href={"../watch"}>
-                    <Image
-                      source={{ uri: anime.attributes.posterImage.small }}
-                      style={styles.midvid}
-                    />
-                    <View style={styles.info}>
-                      <Text style={styles.animeName}>
-                        {anime.attributes.canonicalTitle}
-                      </Text>
-                      <Text style={styles.smallInfo}>Year | ep number</Text>
-                    </View>
-                  </Link>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {animeList.map((anime) => (
+              <TouchableOpacity key={anime.id} style={styles.midbt}>
+                <Link href={`../watch/${anime.id}`}>
+                  <Image
+                    source={{ uri: anime.attributes.posterImage.small }}
+                    style={styles.midvid}
+                  />
+                  <View style={styles.info}>
+                    <Text style={styles.animeName}>
+                      {anime.attributes.canonicalTitle}
+                    </Text>
+                    <Text style={styles.smallInfo}>Year | ep number</Text>
+                  </View>
+                </Link>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
         <View style={styles.vidbox}>
           <Text style={styles.headerText}>Continue Watching</Text>
-          <View>
-            <ScrollView horizontal>
-              {animeList.map((anime) => (
-                <TouchableOpacity key={anime.id} style={styles.midbt}>
-                  <Link href={"../watch"}>
-                    <Image
-                      source={{ uri: anime.attributes.posterImage.small }}
-                      style={styles.midvid}
-                    />
-                    <View style={styles.info}>
-                      <Text style={styles.animeName}>
-                        {anime.attributes.canonicalTitle}
-                      </Text>
-                      <Text style={styles.smallInfo}>Year | ep number</Text>
-                    </View>
-                  </Link>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {animeList.map((anime) => (
+              <TouchableOpacity key={anime.id} style={styles.midbt}>
+                <Link href={`../watch/${anime.id}`}>
+                  <Image
+                    source={{ uri: anime.attributes.posterImage.small }}
+                    style={styles.midvid}
+                  />
+                  <View style={styles.info}>
+                    <Text style={styles.animeName}>
+                      {anime.attributes.canonicalTitle}
+                    </Text>
+                    <Text style={styles.smallInfo}>Year | ep number</Text>
+                  </View>
+                </Link>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       </ScrollView>
     </View>
@@ -282,24 +282,3 @@ const styles = StyleSheet.create({
 });
 
 export default AniwebHome;
-
-{
-  /* <View style={styles.vidbox}>
-<Text style={styles.headerText}>Popular</Text>
-<View>
-  <ScrollView horizontal>
-    {images.map((image) => (
-      <TouchableOpacity
-        key={image.key}
-        style={styles.midbt}
-        onPress={() => navigation.navigate("watch")}
-      >
-        <Image source={image.src} style={styles.midvid} />
-        <Text style={styles.animeName}>Anime Name</Text>
-        <Text style={styles.smallInfo}>Year | ep number</Text>
-      </TouchableOpacity>
-    ))}
-  </ScrollView>
-</View>
-</View> */
-}

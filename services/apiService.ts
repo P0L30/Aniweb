@@ -18,7 +18,14 @@ export interface Anime {
     name: ReactNode;
     canonicalTitle: string;
     synopsis: string;
+    createdAt: string;
     posterImage: {
+      small: string;
+      medium: string;
+      large: string;
+      original: string;
+    };
+    coverImage: {
       small: string;
       medium: string;
       large: string;

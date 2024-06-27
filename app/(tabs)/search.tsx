@@ -9,9 +9,11 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+import { Link } from "expo-router";
 
 const App = () => {
   const [animeList, setAnimeList] = useState<Anime[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const getTrendingAnime = async () => {
@@ -26,22 +28,34 @@ const App = () => {
     getTrendingAnime();
   }, []);
 
+  const filteredAnimeList = animeList.filter((anime) =>
+    anime.attributes.canonicalTitle
+      .toLowerCase()
+      .startsWith(searchQuery.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
-      <View>
-        <TextInput
-          style={styles.input}
-          placeholder="What do you want to watch"
-        />
-      </View>
+      <TextInput
+        style={styles.input}
+        placeholder="What do you want to watch"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
       <View style={styles.searchbox}>
-        <ScrollView style={styles.scroll}>
-          {animeList.map((anime) => (
-            <TouchableOpacity style={styles.textbox}>
-              <Text style={styles.text}>{anime.attributes.canonicalTitle}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        {searchQuery ? (
+          <ScrollView style={styles.scroll}>
+            {filteredAnimeList.map((anime) => (
+              <TouchableOpacity key={anime.id} style={styles.textbox}>
+                <Link href="../watch">
+                  <Text style={styles.text}>
+                    {anime.attributes.canonicalTitle}
+                  </Text>
+                </Link>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        ) : null}
       </View>
     </View>
   );
@@ -59,7 +73,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    color: "#000",
+    color: "white",
     borderRadius: 20,
     borderBottomWidth: 5,
     borderColor: "#071432",

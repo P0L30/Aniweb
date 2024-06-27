@@ -17,7 +17,7 @@ import {
   fetchAnimeGenre,
   Genre,
 } from "../services/apiService";
-// import { Link } from "expo-router";
+import { Link } from "expo-router";
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -53,199 +53,205 @@ const App = () => {
     getTrendingAnime();
   }, []);
 
+  if (!fontsLoaded) {
+    return null; // Or any other loading indicator you prefer
+  }
+
   return (
-    <View style={styles.container}>
-      {/* <ScrollView style={styles.scrollbox}> */}
-      {animeList.length > 0 && (
-        <View style={styles.centered}>
-          <Image
-            source={{
-              uri: animeList[0].attributes.posterImage.large,
-            }}
-            style={styles.backgroundImage}
-          />
-          <LinearGradient
-            colors={["transparent", "#040B1C"]}
-            style={styles.gradient}
-          >
-            <Text style={styles.title}>
-              {animeList[0].attributes.canonicalTitle}
-            </Text>
-          </LinearGradient>
-        </View>
-      )}
-      {animeList.map((anime) => (
-        <View style={styles.infoContainer}>
-          <View>
-            <View style={styles.rowBetween}>
-              <View>
-                <Text style={styles.mainTitle}>
+    <View style={styles.watchBox}>
+      <ScrollView>
+        <View style={styles.posterBox}>
+          {animeList.length > 0 && (
+            <View>
+              <Link href={`../watch/${animeList[0].id}`}>
+                <Image
+                  source={{
+                    uri: animeList[0].attributes.posterImage.large,
+                  }}
+                  style={styles.poster}
+                />
+              </Link>
+              <LinearGradient
+                colors={["transparent", "#040B1C"]}
+                style={styles.gradient}
+              >
+                <Text style={styles.title}>
                   {animeList[0].attributes.canonicalTitle}
                 </Text>
-                <Text style={styles.subTitle}>
-                  1999 - | Action , Advancer , Comedy | 5.0
+              </LinearGradient>
+            </View>
+          )}
+        </View>
+        <View style={styles.infoBox}>
+          {animeList.length > 0 && (
+            <View>
+              <View style={styles.infoBoxTop}>
+                <View>
+                  <Text style={styles.infoTitle}>
+                    {animeList[0].attributes.canonicalTitle}
+                  </Text>
+                  <Text style={styles.smallInfo}>
+                    1999 - | Action , Adventure , Comedy | 5.0
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.playBT}>
+                  <Icon name="play" style={styles.playBtFont} />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.story}>
+                  {animeList[0].attributes.synopsis}
                 </Text>
               </View>
-              <TouchableOpacity style={styles.playButton}>
-                <Icon name="play" style={styles.playbt} />
-              </TouchableOpacity>
+              <View>
+                <ScrollView horizontal>
+                  {Array.from({ length: 20 }, (_, i) => (
+                    <TouchableOpacity key={i + 1} style={styles.seasonButton}>
+                      <Text style={styles.seasonText}>S{i + 1}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+              {animeList.length > 0 && (
+                <TouchableOpacity>
+                  <Link href="https://www.youtube.com/watch?v=-Pe5y3CbJqc">
+                    <View style={styles.vidBox}>
+                      <Image
+                        source={{
+                          uri: animeList[0].attributes.coverImage.small,
+                        }}
+                        style={styles.video}
+                      />
+                      <View style={styles.vidInfoBox}>
+                        <Text style={styles.vidName}>
+                          Ascend to the Dawn! A Pink Dragon Gets Agitated |
+                          Season 20, Episode 1047
+                        </Text>
+                        <Text style={styles.vidInfo}>
+                          One Piece episode 1047 is a solid entry in the ongoing
+                          Wano arc. It has no real overt negatives to mention,
+                          though it does suffer from following an absolute tour
+                          de force in 1046
+                        </Text>
+                      </View>
+                    </View>
+                  </Link>
+                </TouchableOpacity>
+              )}
             </View>
-            <Text style={styles.description}>
-              {animeList[0].attributes.synopsis}
-            </Text>
-          </View>
-          <ScrollView horizontal style={styles.seasonsContainer}>
-            {["S1", "S2", "S3", "S4", "S5", "S6"].map((season) => (
-              <TouchableOpacity key={season} style={styles.seasonButton}>
-                <Text style={styles.seasonText}>{season}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <Image
-            source={require("@/assets/images/ep.jpeg")}
-            style={styles.episodeImage}
-          />
+          )}
         </View>
-      ))}
-      {/* </ScrollView> */}
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollbox: {
-    width: "100%",
-    height: "100%",
+  vidInfoBox: {
+    width: 183,
+    height: 108,
+    gap: 10,
   },
-  title: {
+  vidName: {
     color: "white",
-    fontFamily: "Blacknorthdemo",
-    fontSize: 40,
-    textAlign: "center",
+    fontSize: 9,
+    fontWeight: "500",
   },
-  playbt: {
+  vidInfo: {
     color: "white",
-    fontSize: 30,
+    fontSize: 8,
+    fontWeight: "400",
   },
-  container: {
+  vidBox: {
     width: "100%",
-    height: "100%",
-    borderRadius: 10,
-    backgroundColor: "#040B1C",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  backgroundImage: {
-    position: "absolute",
-    top: -100,
-    zIndex: 0,
-    opacity: 0.95,
-    width: "100%",
-    height: "100%",
-  },
-  buttonsContainer: {
+    height: "auto",
+    display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: 368,
-    height: 56,
-    position: "absolute",
-    top: 38,
-    zIndex: 40,
   },
-  roundButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#000000",
-    justifyContent: "center",
-    alignItems: "center",
+  video: {
+    width: 183,
+    height: 108,
+    borderRadius: 8,
+    marginRight: 10,
   },
-  gradient: {
-    width: "100%",
-    height: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    top: "53%",
-  },
-  infoContainer: {
-    position: "absolute",
-    bottom: 0,
-    height: 326,
-    backgroundColor: "#040B1C",
-    padding: 20,
-    width: "100%",
-  },
-  titleContainer: {
-    width: "100%",
-    height: 70,
-    position: "absolute",
-    bottom: 326,
-    zIndex: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    left: 19,
-  },
-  titleImage: {
-    width: 177,
-    height: 60,
-  },
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
-  },
-  mainTitle: {
-    color: "#ffffff",
-    fontFamily: "sans-serif",
-    fontWeight: "bold",
-    fontSize: 36,
-  },
-  subTitle: {
-    color: "#ffffff",
-    fontFamily: "sans-serif",
+  seasonText: {
+    color: "white",
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "900",
   },
-  playButton: {
+  seasonButton: {
     backgroundColor: "#CC3838",
-    width: 70,
-    height: 68,
-    borderRadius: 34,
+    width: 59,
+    height: 32,
+    borderRadius: 6,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  story: {
+    color: "white",
+    fontSize: 13,
+    fontWeight: "500",
+    textAlign: "justify",
+  },
+  playBtFont: {
+    color: "white",
+    fontSize: 35,
+  },
+  infoBoxTop: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  playBT: {
+    width: 90,
+    height: 88,
+    borderRadius: 50,
+    backgroundColor: "#CC3838",
     justifyContent: "center",
     alignItems: "center",
     paddingLeft: 5,
   },
-  description: {
-    color: "#ffffff",
-    fontFamily: "sans-serif",
-    fontSize: 12,
-    fontWeight: "600",
+  infoBox: {
+    padding: 15,
   },
-  seasonsContainer: {
-    flexDirection: "row",
-    marginTop: 15,
+  infoTitle: {
+    color: "white",
+    fontSize: 40,
+    fontWeight: "900",
   },
-  seasonButton: {
-    height: 22,
-    width: 49,
-    backgroundColor: "#CC3838",
-    borderRadius: 5,
+  smallInfo: {
+    color: "white",
+  },
+  poster: {
+    width: "100%",
+    height: 550,
+  },
+  posterBox: {
+    width: "100%",
+  },
+  watchBox: {
+    backgroundColor: "#040B1C",
+    width: "100%",
+    height: "100%",
+  },
+  gradient: {
+    flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 16,
+    zIndex: 1,
+    position: "absolute",
+    top: "82%",
+    left: 0,
+    height: 100,
   },
-  seasonText: {
-    color: "#ffffff",
-    fontSize: 12,
-  },
-  episodeImage: {
-    width: 153,
-    height: 78,
-    borderRadius: 5,
+  title: {
+    color: "white",
+    fontFamily: "Blacknorthdemo",
+    fontSize: 30,
+    textAlign: "center",
   },
 });
 
