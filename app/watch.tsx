@@ -18,6 +18,7 @@ import {
   Genre,
 } from "../services/apiService";
 import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -54,23 +55,22 @@ const App = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return null; // Or any other loading indicator you prefer
+    return null;
   }
 
   return (
     <View style={styles.watchBox}>
+      <StatusBar style="light" />
       <ScrollView>
         <View style={styles.posterBox}>
           {animeList.length > 0 && (
             <View>
-              <Link href={`../watch/${animeList[0].id}`}>
-                <Image
-                  source={{
-                    uri: animeList[0].attributes.posterImage.large,
-                  }}
-                  style={styles.poster}
-                />
-              </Link>
+              <Image
+                source={{
+                  uri: animeList[0].attributes.posterImage.large,
+                }}
+                style={styles.poster}
+              />
               <LinearGradient
                 colors={["transparent", "#040B1C"]}
                 style={styles.gradient}

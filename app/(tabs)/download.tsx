@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchTrendingAnime, Anime } from "../../services/apiService";
+import { StatusBar } from "expo-status-bar";
 import { Link } from "expo-router";
 import {
   View,
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <View>
         <Text style={styles.headerText}>Your donwloads</Text>
       </View>

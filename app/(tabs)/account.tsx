@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchTrendingAnime, Anime } from "../../services/apiService";
+import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
   View,
@@ -30,6 +31,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <ScrollView>
         <View style={styles.top1}>
           <Text style={styles.headerText}>My AniWeb</Text>

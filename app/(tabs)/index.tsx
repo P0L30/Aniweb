@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
 import {
   fetchTrendingAnime,
   Anime,
@@ -67,6 +68,7 @@ const AniwebHome: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <ScrollView>
         {animeList.length > 0 && (
           <TouchableOpacity style={styles.top}>

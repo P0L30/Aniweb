@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchTrendingAnime, Anime } from "../../services/apiService";
+import { StatusBar } from "expo-status-bar";
 import {
   View,
   Text,
@@ -36,6 +37,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <TextInput
         style={styles.input}
         placeholder="What do you want to watch"
